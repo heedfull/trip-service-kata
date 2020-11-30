@@ -6,19 +6,17 @@ namespace TripServiceKata.Tests
 {
     public class TripServiceTest
     {
-        private readonly User.User GUEST;
-        private readonly User.User UNUSED_USER;
+        const User.User GUEST = null;
+        const User.User UNUSED_USER = null;
 
         [Fact]
         public void ShouldThrowAnExceptionWhenUserIsNotLoggedIn()
         {
             var sut = new TestableTripService();
-
             sut.LoggedInUser = GUEST;
 
             Assert.Throws<UserNotLoggedInException>(() => sut.GetTripsByUser(UNUSED_USER));
         }
-
 
         public class TestableTripService : TripService
         {
