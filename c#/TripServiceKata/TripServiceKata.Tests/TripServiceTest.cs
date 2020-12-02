@@ -23,6 +23,7 @@ namespace TripServiceKata.Tests
         public TripServiceTest()
         {
             tripService = new TestableTripService(this);
+            LoggedInUser = REGISTERED_USER;
         }
 
         [Fact]
@@ -36,8 +37,6 @@ namespace TripServiceKata.Tests
         [Fact]
         public void ShouldNotReturnAnyTripsWhenUsersAreNotFriends()
         {
-            LoggedInUser = REGISTERED_USER;
-
             var friend = new User.User();
             friend.AddFriend(ANOTHER_USER);
             friend.AddTrip(TO_BRAZIL);
@@ -49,9 +48,7 @@ namespace TripServiceKata.Tests
 
         [Fact]
         public void ShouldReturnTripsWhenUsersAreFriends()
-        {
-            LoggedInUser = REGISTERED_USER;
-
+        { 
             var friend = new User.User();
             friend.AddFriend(ANOTHER_USER);
             friend.AddFriend(LoggedInUser);
