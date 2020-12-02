@@ -2,7 +2,7 @@
 using TripServiceKata.Trip;
 using TripServiceKata.User;
 using TripServiceKata.Exception;
-
+using System.Collections.Generic;
 
 namespace TripServiceKata.Tests
 {
@@ -13,9 +13,12 @@ namespace TripServiceKata.Tests
         private static readonly User.User REGISTERED_USER = new User.User();
         private static readonly User.User ANOTHER_USER = new User.User();
         private static readonly Trip.Trip TO_BRAZIL = new Trip.Trip();
+        private Trip.Trip TO_LONDON = new Trip.Trip();
+
         private User.User LoggedInUser;
 
         private TripService tripService;
+        
 
         public TripServiceTest()
         {
@@ -44,6 +47,22 @@ namespace TripServiceKata.Tests
             Assert.Empty(friendTrips);
         }
 
+        [Fact]
+        public void ShouldReturnTripsWhenUsersAreFriends()
+        {
+            LoggedInUser = REGISTERED_USER;
+
+            var friend = new User.User();
+            friend.AddFriend(ANOTHER_USER);
+            friend.AddFriend(LoggedInUser);
+            friend.AddTrip(TO_BRAZIL);
+            friend.AddTrip(TO_LONDON);
+
+            var friendTrips = tripService.GetTripsByUser(friend);
+
+            Assert.Equal(2,friendTrips.Count);
+        }
+
         public class TestableTripService : TripService
         {
             private readonly TripServiceTest parent;
@@ -53,11 +72,15 @@ namespace TripServiceKata.Tests
                 this.parent = parent;
             }
 
-            public override User.User GetLoggedInUser()
+            protected override User.User GetLoggedInUser()
             {
                 return parent.LoggedInUser;
             }
 
+            protected override List<Trip.Trip> tripsBy(User.User user)
+            {
+                return user.Trips();
+            }
         }
     }
 }
