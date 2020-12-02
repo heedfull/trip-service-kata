@@ -1,8 +1,8 @@
 ﻿using Xunit;
 using TripServiceKata.Trip;
-using TripServiceKata.User;
 using TripServiceKata.Exception;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TripServiceKata.Tests
 {
@@ -17,7 +17,7 @@ namespace TripServiceKata.Tests
 
         private User.User LoggedInUser;
 
-        private TripService tripService;
+        private readonly TripService tripService;
         
 
         public TripServiceTest()
@@ -48,12 +48,11 @@ namespace TripServiceKata.Tests
 
         [Fact]
         public void ShouldReturnTripsWhenUsersAreFriends()
-        { 
-            var friend = new User.User();
-            friend.AddFriend(ANOTHER_USER);
-            friend.AddFriend(LoggedInUser);
-            friend.AddTrip(TO_BRAZIL);
-            friend.AddTrip(TO_LONDON);
+        {
+            var friend = UserBuilder.AUser()
+                .FriendsWith(ANOTHER_USER, LoggedInUser)
+                .WithTrips(TO_BRAZIL, TO_LONDON)
+                .Build();
 
             var friendTrips = tripService.GetTripsByUser(friend);
 
@@ -78,6 +77,53 @@ namespace TripServiceKata.Tests
             {
                 return user.Trips();
             }
+        }
+    }
+
+    public class UserBuilder
+    {
+        private List<User.User> Friends = new List<User.User>();
+        private List<Trip.Trip> Trips = new List<Trip.Trip>();
+
+        internal static UserBuilder AUser()
+        {
+            return new UserBuilder();
+        }
+
+        internal User.User Build()
+        {
+            var user = new User.User();
+            AddTripsTo(user);
+            AddFriendsTo(user);
+            return user;
+        }
+
+        private void AddFriendsTo(User.User user)
+        {
+            foreach (var friend in Friends)
+            {
+                user.AddFriend(friend);
+            }
+        }
+
+        private void AddTripsTo(User.User user)
+        {
+            foreach (var trip in Trips)
+            {
+                user.AddTrip(trip);
+            }
+        }
+
+        internal UserBuilder FriendsWith(params User.User[] friends)
+        {
+            Friends = friends.ToList();
+            return this;
+        }
+
+        internal UserBuilder WithTrips(params Trip.Trip[] trips)
+        {
+            Trips = trips.ToList();
+            return this;
         }
     }
 }
