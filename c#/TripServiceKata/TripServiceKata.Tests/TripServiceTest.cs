@@ -13,38 +13,49 @@ namespace TripServiceKata.Tests
         private static readonly User.User REGISTERED_USER = new User.User();
         private static readonly User.User ANOTHER_USER = new User.User();
         private static readonly Trip.Trip TO_BRAZIL = new Trip.Trip();
+        private User.User LoggedInUser;
+
+        private TripService tripService;
+
+        public TripServiceTest()
+        {
+            tripService = new TestableTripService(this);
+        }
 
         [Fact]
         public void ShouldThrowAnExceptionWhenUserIsNotLoggedIn()
-        {
-            var sut = new TestableTripService();
-            sut.LoggedInUser = GUEST;
+        {            
+            LoggedInUser = GUEST;
 
-            Assert.Throws<UserNotLoggedInException>(() => sut.GetTripsByUser(UNUSED_USER));
+            Assert.Throws<UserNotLoggedInException>(() => tripService.GetTripsByUser(UNUSED_USER));
         }
 
         [Fact]
         public void ShouldNotReturnAnyTripsWhenUsersAreNotFriends()
         {
-            var sut = new TestableTripService();
-            sut.LoggedInUser = REGISTERED_USER;
+            LoggedInUser = REGISTERED_USER;
 
             var friend = new User.User();
             friend.AddFriend(ANOTHER_USER);
             friend.AddTrip(TO_BRAZIL);
 
-            var friendTrips = sut.GetTripsByUser(friend);
+            var friendTrips = tripService.GetTripsByUser(friend);
 
             Assert.Empty(friendTrips);
         }
 
         public class TestableTripService : TripService
         {
-            public User.User LoggedInUser;
+            private readonly TripServiceTest parent;
+
+            public TestableTripService(TripServiceTest parent)
+            {
+                this.parent = parent;
+            }
 
             public override User.User GetLoggedInUser()
             {
-                return LoggedInUser;
+                return parent.LoggedInUser;
             }
 
         }
