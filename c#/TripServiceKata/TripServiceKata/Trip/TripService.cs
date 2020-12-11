@@ -14,14 +14,9 @@ namespace TripServiceKata.Trip
                 throw new UserNotLoggedInException();
             }
 
-            List<Trip> tripList = new List<Trip>();
-
-            if (user.isFriendsWith(loggedInUser))
-            {
-                tripList = tripsBy(user);
-            }
-            return tripList;
-
+            return user.isFriendsWith(loggedInUser) 
+                ? tripsBy(user) 
+                : new List<Trip>();
         }
 
         protected virtual List<Trip> tripsBy(User.User user)
