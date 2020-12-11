@@ -13,8 +13,7 @@ namespace TripServiceKata.Trip
             
             if (loggedInUser != null)
             {
-                bool isFriend = user.isFriendsWith(loggedInUser);
-                if (isFriend)
+                if (user.isFriendsWith(loggedInUser))
                 {
                     tripList = tripsBy(user);
                 }
