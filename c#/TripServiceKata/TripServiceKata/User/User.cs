@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TripServiceKata.User
 {
@@ -15,6 +16,11 @@ namespace TripServiceKata.User
         public void AddFriend(User user)
         {
             friends.Add(user);
+        }
+
+        public bool isFriendsWith(User anotherUser)
+        {
+            return friends.Contains(anotherUser);
         }
 
         public void AddTrip(Trip.Trip trip)
