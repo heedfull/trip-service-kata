@@ -9,13 +9,14 @@ namespace TripServiceKata.Trip
         public List<Trip> GetTripsByUser(User.User user)
         {
             List<Trip> tripList = new List<Trip>();
-            User.User loggedUser = GetLoggedInUser();
-            bool isFriend = false;
-            if (loggedUser != null)
+            User.User loggedInUser = GetLoggedInUser();
+            
+            if (loggedInUser != null)
             {
+                bool isFriend = user.isFriendsWith(loggedInUser);
                 foreach (User.User friend in user.GetFriends())
                 {
-                    if (friend.Equals(loggedUser))
+                    if (friend.Equals(loggedInUser))
                     {
                         isFriend = true;
                         break;
