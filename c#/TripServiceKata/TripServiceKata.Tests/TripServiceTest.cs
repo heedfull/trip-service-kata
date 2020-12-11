@@ -32,7 +32,7 @@ namespace TripServiceKata.Tests
         {
             LoggedInUser = GUEST;
 
-            Assert.Throws<UserNotLoggedInException>(() => tripService.GetTripsByUser(UNUSED_USER));
+            Assert.Throws<UserNotLoggedInException>(() => tripService.GetTripsByUser(UNUSED_USER, GUEST));
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace TripServiceKata.Tests
                 .WithTrips(TO_BRAZIL)
                 .Build();
 
-            var friendTrips = tripService.GetTripsByUser(friend);
+            var friendTrips = tripService.GetTripsByUser(friend, LoggedInUser);
 
             Assert.Empty(friendTrips);
         }
@@ -56,7 +56,7 @@ namespace TripServiceKata.Tests
                 .WithTrips(TO_BRAZIL, TO_LONDON)
                 .Build();
 
-            var friendTrips = tripService.GetTripsByUser(friend);
+            var friendTrips = tripService.GetTripsByUser(friend, LoggedInUser);
 
             Assert.Equal(2, friendTrips.Count);
         }

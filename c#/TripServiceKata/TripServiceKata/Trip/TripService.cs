@@ -6,7 +6,7 @@ namespace TripServiceKata.Trip
 {
     public class TripService
     {
-        public List<Trip> GetTripsByUser(User.User user)
+        public List<Trip> GetTripsByUser(User.User user, User.User loggedInUser)
         {
             if (GetLoggedInUser() == null)
             {
