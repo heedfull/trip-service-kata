@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TripServiceKata.Exception;
 
 namespace TripServiceKata.Trip
@@ -9,6 +10,11 @@ namespace TripServiceKata.Trip
         {
             throw new DependendClassCallDuringUnitTestException(
                         "TripDAO should not be invoked on an unit test.");
+        }
+
+        public List<Trip> tripsBy(User.User user)
+        {
+            return TripDAO.FindTripsByUser(user);
         }
     }
 }
